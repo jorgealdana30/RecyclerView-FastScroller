@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.qtalk.sample.R
 import com.qtalk.sample.adapters.BasicAdapter
-import kotlinx.android.synthetic.main.fragment_basic.view.*
+import com.qtalk.sample.databinding.FragmentBasicBinding
 import kotlinx.coroutines.*
 
 class BasicFragment : Fragment() {
@@ -17,25 +17,29 @@ class BasicFragment : Fragment() {
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
 
     private var swipeJob: Job? = null
-
+    private lateinit var binding: FragmentBasicBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_basic, container, false)
+    ): View {
+        return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentBasicBinding.inflate(layoutInflater)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(view) {
-            with(this.basic_recycler_view) {
+            with(binding.basicRecyclerView) {
                 adapter = BasicAdapter(activity)
                 addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
             }
 
-            with(this.swipe_refresh_layout) {
+            with(binding.swipeRefreshLayout) {
                 swipeRefreshLayout = this
                 setOnRefreshListener {
                     swipeJob = CoroutineScope(Dispatchers.Main).launch {
@@ -45,7 +49,7 @@ class BasicFragment : Fragment() {
                             swipeRefreshLayout?.isRefreshing = false
                     }
                 }
-            }
+
         }
     }
 

@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.qtalk.sample.R
-import kotlinx.android.synthetic.main.recycler_view_list_item.view.*
 
 class BasicAdapter(private val context: Context?) :
     RecyclerView.Adapter<BasicAdapter.ViewHolder>(), RecyclerViewFastScroller.OnPopupTextUpdate {
@@ -25,12 +24,12 @@ class BasicAdapter(private val context: Context?) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.textView.text = (position + 1).toString()
+        //holder.textView.text = (position + 1).toString()
     }
 
     override fun getItemCount() = 100
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.text_view
+        //val textView: TextView = view.text_view
     }
 }

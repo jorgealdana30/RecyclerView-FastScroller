@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         app:handleHeight="32dp"
         app:handleWidth="@dimen/default_handle_size"
+        app:disableTrack="true"
         app:supportSwipeToRefresh="true"
         app:handleVisibilityDuration="500">
 

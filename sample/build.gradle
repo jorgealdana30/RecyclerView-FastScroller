@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
 android {
     compileSdkVersion versions.'compileSdk'
@@ -16,6 +15,10 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true // material design lib adds a lot of methods
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {

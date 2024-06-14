@@ -133,6 +133,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
         const val hasEmptyItemDecorator: Boolean = true
         const val handleVisibilityDuration: Int = 0
         const val trackMargin: Int = 0
+        const val disableTrack = false
     }
 
     /**
@@ -219,6 +220,8 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
      * The duration for which the handle should remain visible, defaults to -1 (don't hide)
      * */
     var handleVisibilityDuration: Int = -1
+
+    var disableTrack: Boolean = Defaults.disableTrack
 
     // --- internal properties
     private var popupPosition: PopupPosition = Defaults.popupPosition
@@ -364,6 +367,9 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                     Defaults.trackMargin
                 )
 
+            disableTrack =
+                attribs.getBoolean(R.styleable.RecyclerViewFastScroller_disableTrack, Defaults.disableTrack)
+
             TextViewCompat.setTextAppearance(
                 popupTextView,
                 attribs.getResourceId(
@@ -410,6 +416,23 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                 when (touchAction) {
                     MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
 
+                        val handlePosition = IntArray(2).also {
+                            handleImageView.getLocationOnScreen(it)
+                        }
+                        if (disableTrack) {
+                            when (fastScrollDirection) {
+                                FastScrollDirection.HORIZONTAL -> {
+                                    val handleRange = handlePosition[0].toFloat() .. handlePosition[0]+handleLength
+                                    if (!handleRange.contains(motionEvent.rawX))
+                                        return@OnTouchListener false
+                                }
+                                FastScrollDirection.VERTICAL -> {
+                                    val handleRange = handlePosition[1].toFloat() .. handlePosition[1]+handleLength
+                                    if (!handleRange.contains(motionEvent.rawY))
+                                        return@OnTouchListener false
+                                }
+                            }
+                        }
                         // disallow parent to spy on touch events
                         requestDisallowInterceptTouchEvent(true)
 
@@ -669,16 +692,25 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
      * */
     private inline fun ViewPropertyAnimator.onAnimationCancelled(crossinline body: () -> Unit) {
         this.setListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(p0: Animator?) {
+            override fun onAnimationRepeat(animation: Animator) {
             }
 
-            override fun onAnimationEnd(p0: Animator?) {
+            override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
             }
 
-            override fun onAnimationStart(p0: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
+
             }
 
-            override fun onAnimationCancel(p0: Animator?) {
+            override fun onAnimationStart(animation: Animator, isReverse: Boolean) {
+
+            }
+
+            override fun onAnimationStart(animation: Animator) {
+
+            }
+
+            override fun onAnimationCancel(animation: Animator) {
                 body()
             }
         })

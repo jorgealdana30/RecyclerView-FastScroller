@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.qtalk.sample.databinding.ActivityMainBinding
 import com.qtalk.sample.fragments.AdvancedFragment
 import com.qtalk.sample.fragments.BasicFragment
 import com.qtalk.sample.fragments.ContactsFragment
 import com.qtalk.sample.fragments.ProgrammingLanguagesFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,11 +22,14 @@ class MainActivity : AppCompatActivity() {
         private const val PAGE_INDEX_CONTACTS = 3
     }
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        view_pager.adapter = object : FragmentStateAdapter(this) {
+        binding.viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
                 return VIEWPAGER_COUNT
             }
@@ -42,10 +45,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
+        binding.tabLayout.tabMode = TabLayout.MODE_SCROLLABLE
 
         TabLayoutMediator(
-            tabLayout, view_pager, true, true
+            binding.tabLayout, binding.viewPager, true, true
         ) { tab, position ->
             tab.text = when (position) {
                 PAGE_INDEX_BASIC -> resources?.getString(R.string.basic_fragment)
