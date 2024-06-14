@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.qtalk.sample.R
+import com.qtalk.sample.databinding.RecyclerViewListItemBinding
+import com.qtalk.sample.databinding.RecyclerViewListItemCenterBinding
 
 class BasicAdapter(private val context: Context?) :
     RecyclerView.Adapter<BasicAdapter.ViewHolder>(), RecyclerViewFastScroller.OnPopupTextUpdate {
@@ -17,19 +19,17 @@ class BasicAdapter(private val context: Context?) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(context)
-                .inflate(R.layout.recycler_view_list_item_center, parent, false)
-        )
+        return ViewHolder(RecyclerViewListItemCenterBinding.inflate(
+            LayoutInflater.from(context), parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //holder.textView.text = (position + 1).toString()
+        holder.textView.text = (position + 1).toString()
     }
 
     override fun getItemCount() = 100
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //val textView: TextView = view.text_view
+    class ViewHolder(view: RecyclerViewListItemCenterBinding) : RecyclerView.ViewHolder(view.root) {
+        val textView: TextView = view.textView
     }
 }

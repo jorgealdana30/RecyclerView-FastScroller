@@ -25,6 +25,6 @@
 
         <attr name="handleVisibilityDuration" format="integer" />
 
-        <attr name="disableTrack" format="boolean"/>
+        <attr name="heightTrack" format="dimension"/>
     </declare-styleable>
 </resources>

@@ -5,13 +5,15 @@
     android:layout_height="match_parent">
 
     <com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
-        android:id="@+id/fastScroller"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:handleHeight="32dp"
-        app:handleWidth="@dimen/default_handle_size"
-        app:disableTrack="true"
+        android:id="@+id/fastscroller"
+        app:popupDrawable="@drawable/pop_up"
         app:supportSwipeToRefresh="true"
+        app:handleHeight="50dp"
+        app:handleDrawable="@drawable/track_sample"
+        app:handleWidth="50dp"
+        app:popupTextStyle="@style/popUpTextFastScroll"
+        android:layout_height="match_parent"
         app:handleVisibilityDuration="-1">
 
         <androidx.recyclerview.widget.RecyclerView

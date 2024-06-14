@@ -29,6 +29,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -133,7 +134,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
         const val hasEmptyItemDecorator: Boolean = true
         const val handleVisibilityDuration: Int = 0
         const val trackMargin: Int = 0
-        const val disableTrack = false
     }
 
     /**
@@ -220,8 +220,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
      * The duration for which the handle should remain visible, defaults to -1 (don't hide)
      * */
     var handleVisibilityDuration: Int = -1
-
-    var disableTrack: Boolean = Defaults.disableTrack
 
     // --- internal properties
     private var popupPosition: PopupPosition = Defaults.popupPosition
@@ -369,12 +367,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                     Defaults.trackMargin
                 )
 
-            disableTrack =
-                attribs.getBoolean(
-                    R.styleable.RecyclerViewFastScroller_disableTrack,
-                    Defaults.disableTrack
-                )
-
             TextViewCompat.setTextAppearance(
                 popupTextView,
                 attribs.getResourceId(
@@ -386,8 +378,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
             attribs.recycle()
         }
         popupAnimationRunnable = Runnable { popupTextView.animateVisibility(false) }
-        if (disableTrack)
-            disableTrack()
     }
 
     override fun onDetachedFromWindow() {
@@ -426,23 +416,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                         val handlePosition = IntArray(2).also {
                             handleImageView.getLocationOnScreen(it)
                         }
-                        if (disableTrack) {
-                            when (fastScrollDirection) {
-                                FastScrollDirection.HORIZONTAL -> {
-                                    val handleRange =
-                                        handlePosition[0].toFloat()..handlePosition[0] + handleLength
-                                    if (!handleRange.contains(motionEvent.rawX))
-                                        return@OnTouchListener false
-                                }
 
-                                FastScrollDirection.VERTICAL -> {
-                                    val handleRange =
-                                        handlePosition[1].toFloat()..handlePosition[1] + handleLength
-                                    if (!handleRange.contains(motionEvent.rawY))
-                                        return@OnTouchListener false
-                                }
-                            }
-                        }
                         // disallow parent to spy on touch events
                         requestDisallowInterceptTouchEvent(true)
 
@@ -543,9 +517,10 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                     PopupPosition.BEFORE_TRACK -> {
                         when (fastScrollDirection) {
                             FastScrollDirection.HORIZONTAL ->
-                                it.addRule(ABOVE, trackView.id)
+                                it.addRule(CENTER_HORIZONTAL, trackView.id)
+
                             FastScrollDirection.VERTICAL -> {
-                                it.addRule(START_OF, trackView.id)
+                                it.addRule(CENTER_HORIZONTAL, trackView.id)
                             }
                         }
                     }
@@ -553,10 +528,10 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                     PopupPosition.AFTER_TRACK -> {
                         when (fastScrollDirection) {
                             FastScrollDirection.HORIZONTAL ->
-                                it.addRule(BELOW, trackView.id)
+                                it.addRule(CENTER_HORIZONTAL, trackView.id)
 
                             FastScrollDirection.VERTICAL -> {
-                                it.addRule(RIGHT_OF, trackView.id)
+                                it.addRule(CENTER_HORIZONTAL, trackView.id)
                             }
                         }
                     }
@@ -573,7 +548,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                 popupTextView.layoutParams = LayoutParams(
                     LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT
-                ).also { it.addRule(CENTER_VERTICAL, R.id.trackView) }
+                ).also { it.addRule(RIGHT_OF, R.id.trackView) }
                 trackView.layoutParams = LayoutParams(
                     LayoutParams.MATCH_PARENT,
                     LayoutParams.WRAP_CONTENT
@@ -586,7 +561,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
                     LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT
                 ).also {
-                    it.addRule(CENTER_VERTICAL, R.id.trackView)
+                    it.addRule(RIGHT_OF, R.id.trackView)
                 }
                 trackView.layoutParams = LayoutParams(
                     LayoutParams.WRAP_CONTENT,
@@ -644,13 +619,6 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
         trackView = findViewById(R.id.trackView)
     }
 
-    private fun disableTrack() {
-        View.inflate(context, R.layout.fastscroller_track_thumb, this)
-        trackView.apply {
-            layoutParams.width = 10
-        }
-    }
-
     private fun addPopupLayout() {
         View.inflate(context, R.layout.fastscroller_popup, this)
         popupTextView = findViewById(R.id.fastScrollPopupTV)
@@ -683,7 +651,7 @@ class RecyclerViewFastScroller @JvmOverloads constructor(
         }
 
         moveViewToRelativePositionWithBounds(handleImageView, offset)
-        moveViewToRelativePositionWithBounds(popupTextView, offset - popupLength)
+        moveViewToRelativePositionWithBounds(popupTextView, offset - 10)
     }
 
     /**
