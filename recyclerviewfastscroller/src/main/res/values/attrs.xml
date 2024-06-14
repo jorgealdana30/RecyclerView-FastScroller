@@ -24,5 +24,7 @@
         <attr name="trackMarginEnd" format="dimension" />
 
         <attr name="handleVisibilityDuration" format="integer" />
+
+        <attr name="disableTrack" format="boolean"/>
     </declare-styleable>
 </resources>

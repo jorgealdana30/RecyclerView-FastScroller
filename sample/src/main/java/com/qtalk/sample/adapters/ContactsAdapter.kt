@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.qtalk.sample.R
-import kotlinx.android.synthetic.main.recycler_view_list_item.view.*
 
 class ContactsAdapter(private val mContext: Context?, private val mNameList: List<String>) :
     RecyclerView.Adapter<ContactsAdapter.ContactsViewHolder>(),
@@ -32,10 +31,10 @@ class ContactsAdapter(private val mContext: Context?, private val mNameList: Lis
     }
 
     override fun onBindViewHolder(holder: ContactsViewHolder, position: Int) {
-        holder.mTextView.text = mNameList[position]
+        //holder.mTextView.text = mNameList[position]
     }
 
     class ContactsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val mTextView: TextView = itemView.text_view
+        //val mTextView: TextView = itemView.text_view
     }
 }

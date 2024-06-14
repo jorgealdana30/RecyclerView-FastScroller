@@ -1,5 +1,6 @@
 package com.qtalk.sample.fragments
 
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,60 +13,62 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.qtalk.sample.R
 import com.qtalk.sample.adapters.ContactsAdapter
-import kotlinx.android.synthetic.main.fragment_contacts.view.*
+import com.qtalk.sample.databinding.FragmentContactsBinding
 
 class ContactsFragment : Fragment() {
 
     private var mNameList: ArrayList<String> = ArrayList()
+    private lateinit var binding: FragmentContactsBinding
 
     companion object {
         private const val PERMISSIONS_REQUEST_READ_CONTACTS = 100
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentContactsBinding.inflate(layoutInflater)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(view)
+        //programmatically alter the `width` and `height` of the PopupTextView of FastScroller
+        with(binding.fastScrollerContacts) {
+            popupTextView.layoutParams.width =
+                activity?.resources?.getDimension(R.dimen.contacts_popup_size)?.toInt() ?: 0
+            popupTextView.layoutParams.height =
+                activity?.resources?.getDimension(R.dimen.contacts_popup_size)?.toInt() ?: 0
+            popupTextView.requestLayout()
+        }
+        with(binding.contactsRecyclerView)
         {
-            //programmatically alter the `width` and `height` of the PopupTextView of FastScroller
-            with(fast_scroller_contacts) {
-                popupTextView.layoutParams.width =
-                    activity?.resources?.getDimension(R.dimen.contacts_popup_size)?.toInt() ?: 0
-                popupTextView.layoutParams.height =
-                    activity?.resources?.getDimension(R.dimen.contacts_popup_size)?.toInt() ?: 0
-                popupTextView.requestLayout()
+            adapter = ContactsAdapter(activity, mNameList)
+            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+            //checking for permissions to fetch contacts
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity?.checkSelfPermission(
+                    android.Manifest.permission.READ_CONTACTS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.READ_CONTACTS),
+                    PERMISSIONS_REQUEST_READ_CONTACTS
+                )
+            } else {
+                if (mNameList.size == 0)
+                    retrieveContacts() else {}
             }
-            with(contacts_recycler_view)
-            {
-                adapter = ContactsAdapter(activity, mNameList)
-                addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
-                //checking for permissions to fetch contacts
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity?.checkSelfPermission(
-                        android.Manifest.permission.READ_CONTACTS
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.READ_CONTACTS),
-                        PERMISSIONS_REQUEST_READ_CONTACTS
-                    )
-                } else {
-                    if (mNameList.size == 0)
-                        retrieveContacts()
-                }
-            }
-
         }
     }
 
+    @SuppressLint("Range")
     private fun retrieveContacts() {
-
         activity
             ?.contentResolver
             ?.let { contentResolver ->
@@ -82,7 +85,7 @@ class ContactsFragment : Fragment() {
                         }
                     }
             }
-        view?.contacts_recycler_view?.adapter?.notifyDataSetChanged()
+        binding.contactsRecyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun onRequestPermissionsResult(

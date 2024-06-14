@@ -6,14 +6,12 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
-import com.qtalk.sample.R
 import com.qtalk.sample.data.Country
-import kotlinx.android.synthetic.main.recycler_view_list_item.view.*
+import com.qtalk.sample.databinding.RecyclerViewListItemBinding
 import kotlin.math.ln
 import kotlin.math.pow
 
@@ -31,8 +29,7 @@ class AdvancedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            LayoutInflater.from(mContext)
-                .inflate(R.layout.recycler_view_list_item, parent, false)
+            RecyclerViewListItemBinding.inflate(LayoutInflater.from(mContext), parent, false)
         )
     }
 
@@ -68,7 +65,7 @@ class AdvancedAdapter(
         return Color.HSVToColor(floatArrayOf(h.toFloat(), s.toFloat(), v.toFloat()))
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val mTextView: TextView? = view.text_view
+    class ViewHolder(view: RecyclerViewListItemBinding) : RecyclerView.ViewHolder(view.root) {
+        val mTextView: TextView = view.textView
     }
 }

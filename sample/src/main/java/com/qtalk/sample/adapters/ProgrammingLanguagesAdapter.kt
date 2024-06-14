@@ -6,27 +6,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.qtalk.sample.R
-import kotlinx.android.synthetic.main.recycler_view_list_item.view.*
+import com.qtalk.sample.databinding.RecyclerViewListItemBinding
 
 class ProgrammingLanguagesAdapter(private val list: List<String>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    RecyclerView.Adapter<ProgrammingLanguagesAdapter.ViewHolder>(),
     RecyclerViewFastScroller.OnPopupTextUpdate
 {
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: RecyclerViewListItemBinding) : RecyclerView.ViewHolder(view.root)
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder.itemView.text_view.text = list[position]
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.view.textView.text = list[position]
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_list_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(RecyclerViewListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun getItemCount(): Int =
         list.size
 
     override fun onChange(position: Int): CharSequence =
-        list[position].first().toUpperCase().toString()
+        list[position].first().uppercaseChar().toString()
 
 }

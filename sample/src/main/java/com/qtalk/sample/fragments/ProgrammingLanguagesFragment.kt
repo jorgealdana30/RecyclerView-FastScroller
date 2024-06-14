@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller
 import com.qtalk.sample.R
 import com.qtalk.sample.adapters.ProgrammingLanguagesAdapter
-import kotlinx.android.synthetic.main.fragment_programming_languages.view.*
+import com.qtalk.sample.databinding.FragmentProgrammingLanguagesBinding
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.Locale
 
 class ProgrammingLanguagesFragment : Fragment() {
+
+    private lateinit var binding: FragmentProgrammingLanguagesBinding
 
     private val programmingLanguages: List<String> by lazy {
         Json.decodeFromString<List<String>>(
@@ -24,6 +26,12 @@ class ProgrammingLanguagesFragment : Fragment() {
         ).sortedBy { it.toLowerCase(Locale.ROOT) }
     }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentProgrammingLanguagesBinding.inflate(layoutInflater)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,25 +39,25 @@ class ProgrammingLanguagesFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_programming_languages, container, false).apply {
 
-            recyclerView.layoutManager = LinearLayoutManager(
+            binding.recyclerView.layoutManager = LinearLayoutManager(
                 context,
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
 
-            fab.setOnClickListener {
-                with(fastScroller) {
+            binding.fab.setOnClickListener {
+                with(binding.fastScroller) {
                     val tmp = handleWidth
                     handleWidth = handleHeight
                     handleHeight = tmp
 
                     fastScrollDirection =
                         if (fastScrollDirection == RecyclerViewFastScroller.FastScrollDirection.HORIZONTAL) {
-                            recyclerView.layoutManager =
+                            binding.recyclerView.layoutManager =
                                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                             RecyclerViewFastScroller.FastScrollDirection.VERTICAL
                         } else {
-                            recyclerView.layoutManager =
+                            binding.recyclerView.layoutManager =
                                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                             RecyclerViewFastScroller.FastScrollDirection.HORIZONTAL
                         }
@@ -59,6 +67,7 @@ class ProgrammingLanguagesFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.recyclerView.adapter = ProgrammingLanguagesAdapter(programmingLanguages)
+        binding.recyclerView.adapter = ProgrammingLanguagesAdapter(programmingLanguages)
     }
+
 }
