@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <item>
+        <shape>
+            <size
+                android:width="25dp"
+                android:height="50dp"/>
+            <corners
+                android:topLeftRadius="50dp"
+                android:bottomLeftRadius="50dp"
+                />
+
+            <padding
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp" />
+
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+    <item android:top="20dp">
+        <vector
+            android:height="10dp"
+            android:width="10dp"
+            android:viewportHeight="100"
+            android:viewportWidth="200" >
+            <group
+                android:translateY="20"
+                android:translateX="70"
+                android:name="triableGroup">
+                <path
+                    android:name="triangle"
+                    android:fillColor="@android:color/black"
+                    android:pathData="M 10 0 L 50 20 L 90 0 Z" />
+
+            </group>
+        </vector>
+    </item>
+    <item android:bottom="20dp">
+        <vector
+            android:height="10dp"
+            android:width="10dp"
+            android:viewportHeight="100"
+            android:viewportWidth="200" >
+            <group
+                android:translateY="20"
+                android:translateX="70"
+                android:name="triableGroup2">
+                <path
+                    android:name="triangle2"
+                    android:fillColor="@android:color/black"
+                    android:pathData="M 10 50 L 50 30 L 90 50 Z" />
+
+            </group>
+        </vector>
+    </item>
+</layer-list>
